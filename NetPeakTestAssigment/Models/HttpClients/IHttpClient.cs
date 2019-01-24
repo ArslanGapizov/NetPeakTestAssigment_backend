@@ -7,6 +7,6 @@ namespace NetPeakTestAssigment.Models.HttpClients
 {
     public interface IHttpClient
     {
-        Task<ResponseHttp> SendAsync(string url);
+        Task<ResponseHttp> SendAsync(Uri uri);
     }
 }

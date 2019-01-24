@@ -7,19 +7,19 @@ namespace NetPeakTestAssigment.Models
 {
     public static class Extensions
     {
-        public static IEnumerable<HTMLLinkDTO> BeautifyLinks(this IEnumerable<string> links, string domain)
+        //From relative to absolute links, also mark links external and internal relative to domain
+        public static IEnumerable<HTMLLinkDTO> RelativeToAbsoluteLinks(this IEnumerable<string> links, string domain)
         {
             Uri domainUri = new Uri(domain);
+
+            Uri result = null;
             foreach (var link in links)
             {
-                Uri result = null;
                 LinkType linkType = LinkType.EXTERNAL;
-
                 Uri.TryCreate(domainUri, link, out result);
                 if (domainUri.Host == result?.Host)
-                {
                     linkType = LinkType.INTERNAL;
-                }
+
                 yield return new HTMLLinkDTO
                 {
                     Href = result?.AbsoluteUri ?? link,
@@ -27,13 +27,12 @@ namespace NetPeakTestAssigment.Models
                 };
             }
         }
-        public static IEnumerable<HTMLImageDTO> BeautifyImageLinks(this IEnumerable<Parser.HTMLImage> imgs, string domain)
+        public static IEnumerable<HTMLImageDTO> imageLinksToAbsoluteLinks(this IEnumerable<Parser.HTMLImage> imgs, string domain)
         {
             Uri domainUri = new Uri(domain);
+            Uri result = null;
             foreach (var img in imgs)
             {
-                Uri result = null;
-
                 Uri.TryCreate(domainUri, img.Src, out result);
                 yield return new HTMLImageDTO
                 {

@@ -10,13 +10,14 @@ namespace NetPeakTestAssigment.Models.Parser
     {
         public SiteDetails ParseHTML(string html)
         {
-            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            HtmlDocument htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(html);
 
             if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
             {
                 // TODO: Handle any parse errors if required
             }
+
             SiteDetails result = new SiteDetails
             {
                 Title = GetTitle(htmlDoc),
@@ -29,6 +30,7 @@ namespace NetPeakTestAssigment.Models.Parser
             return result;
         }
 
+        //Get paths from tags <img> with src
         private List<HTMLImage> GetHTMLImages(HtmlDocument htmlDoc)
         {
             List<HTMLImage> images = new List<HTMLImage>();
@@ -52,7 +54,7 @@ namespace NetPeakTestAssigment.Models.Parser
             }
             return images;
         }
-
+        //Get paths from tags <a> with href
         private List<string> GetLinks(HtmlDocument htmlDoc)
         {
             List<string> links = new List<string>();
@@ -69,7 +71,7 @@ namespace NetPeakTestAssigment.Models.Parser
             }
             return links;
         }
-
+        //Get innerHTML from tags <h1>
         private List<string> GetH1Content(HtmlDocument htmlDoc)
         {
             List<string> headersH1 = new List<string>();
@@ -82,13 +84,13 @@ namespace NetPeakTestAssigment.Models.Parser
             }
             return headersH1;
         }
-
+        //Get innerHTML from <title> tag
         private string GetTitle(HtmlDocument htmlDoc)
         {
             HtmlNode titleNode = htmlDoc.DocumentNode.SelectSingleNode("//title");
             return titleNode?.InnerHtml;
         }
-
+        //Get content of meta tag with attribute name="description"
         private string GetDescription(HtmlDocument htmlDoc)
         {
             HtmlNode descriptionNode = htmlDoc.DocumentNode.SelectNodes("//meta")?

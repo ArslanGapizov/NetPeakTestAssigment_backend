@@ -14,6 +14,8 @@ RUN dotnet build "NetPeakTestAssigment.csproj" -c Release -o /app
 FROM build AS publish
 RUN dotnet publish "NetPeakTestAssigment.csproj" -c Release -o /app
 
+#RUN ASPNETCORE_ENVIRONMENT="Development"
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .

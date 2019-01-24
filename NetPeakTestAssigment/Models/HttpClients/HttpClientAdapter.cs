@@ -14,28 +14,32 @@ namespace NetPeakTestAssigment.Models.HttpClients
         {
             _clientFactory = clientFactory;
         }
-        public async Task<ResponseHttp> SendAsync(string url)
+        public async Task<ResponseHttp> SendAsync(Uri uri)
         {
             HttpRequestMessage requestHttp = new HttpRequestMessage(HttpMethod.Get,
-                                                 url);
+                                                 uri.AbsoluteUri);
+
             HttpClient client = _clientFactory.CreateClient();
+            
+            HttpResponseMessage responseHttp;
+            //Measuring TTFB
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            HttpResponseMessage responseHttp;
             try
             {
-                
                 responseHttp = await client.SendAsync(requestHttp, HttpCompletionOption.ResponseHeadersRead);
+                //Not exactly TTFB, it is a time when headers is available, but content is not
                 sw.Stop();
             }
-            catch (HttpRequestException e)
+            //Catch error, for example in case of wrong Uri
+            catch (HttpRequestException ex)
             {
-                return null;
+                throw ex;
             }
             finally
             {
-                /*if (sw.IsRunning)
-                    sw.Stop();*/
+                if (sw.IsRunning)
+                    sw.Stop();
             }
 
             return new ResponseHttp

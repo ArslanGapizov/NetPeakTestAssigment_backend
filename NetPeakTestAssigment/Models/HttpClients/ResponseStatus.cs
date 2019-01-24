@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace NetPeakTestAssigment.Models.HttpClients
 {
+    //Http status code
     public class ResponseStatus
     {
         public int Code { get; set; }
